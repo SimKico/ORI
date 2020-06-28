@@ -3,6 +3,7 @@ import argparse
 import glob
 
 import pacman
+import os
 
 
 def get_test_cases():
