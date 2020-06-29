@@ -11,19 +11,20 @@
 # Student side autograding was added by Brad Miller, Nick Hay, and
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
-from game import Agent
+from game import Agent, Directions
 from searchProblems import PositionSearchProblem
 
 import util
 import time
 import search
+import random
 
 """
 IMPORTANT
 `agent` defines which agent you will use. By default, it is set to ClosestDotAgent,
 but when you're ready to test your own agent, replace it with MyAgent
 """
-def createAgents(num_pacmen, agent='ClosestDotAgent'):
+def createAgents(num_pacmen, agent='MyAgent'):
     return [eval(agent)(index=i) for i in range(num_pacmen)]
 
 class MyAgent(Agent):
@@ -31,14 +32,27 @@ class MyAgent(Agent):
     Implementation of your agent.
     """
 
+    pacmanAmount = 0
+    chasingGoal = []
+
     def getAction(self, state):
         """
         Returns the next action the agent will take
         """
-
-        "*** YOUR CODE HERE ***"
-
-        raise NotImplementedError()
+        if self.isFinished:
+            return Directions.STOP
+        else:
+            if len(self.actions) == 0:
+                actions = search.bfs(MyFoodSearchProblem(state, self.index))
+                self.actions = actions
+                # print(actions)
+            if len(self.actions) > 0:
+                nextAction = self.actions[0]
+                del self.actions[0]
+                return nextAction
+            else:
+                self.isFinished = True
+                return Directions.STOP
 
     def initialize(self):
         """
@@ -48,13 +62,52 @@ class MyAgent(Agent):
         """
 
         "*** YOUR CODE HERE"
+        self.isFinished = False
+        self.actions = []
 
-        raise NotImplementedError()
+        MyAgent.pacmanAmount += 1
 
 """
 Put any other SearchProblems or search methods below. You may also import classes/methods in
 search.py and searchProblems.py. (ClosestDotAgent as an example below)
 """
+
+
+class MyFoodSearchProblem(PositionSearchProblem):
+
+    def __init__(self, gameState, agentIndex):
+        "Stores information from the gameState.  You don't need to change this."
+        # Store the food for later reference
+        self.food = gameState.getFood()
+
+        # Store info for the PositionSearchProblem (no need to change this)
+        self.walls = gameState.getWalls()
+        self.startState = gameState.getPacmanPosition(agentIndex)
+        self.costFn = lambda x: 1
+        self._visited, self._visitedlist, self._expanded = {}, [], 0  # DO NOT CHANGE
+
+
+        self.agentIndex = agentIndex
+        self.foodAll = self.food.asList()
+        avgFood = len(self.foodAll) // MyAgent.pacmanAmount + 1
+        self.foodByAgent = self.foodAll[agentIndex * avgFood: (agentIndex + 1) * avgFood]
+
+    def isGoalState(self, state):
+        if len(self.foodAll) <= MyAgent.pacmanAmount:
+            return state in self.foodAll
+        if state in self.foodAll:
+            if (state in self.foodByAgent) and (state not in MyAgent.chasingGoal):
+                MyAgent.chasingGoal.append(state)
+                return True
+            elif (util.manhattanDistance(state, self.startState) <= (1 + self.agentIndex) * (1 + self.agentIndex)) \
+                    and (state not in MyAgent.chasingGoal):
+                MyAgent.chasingGoal.append(state)
+                return True
+            else:
+                return state in self.foodByAgent
+        else:
+            return False
+
 
 class ClosestDotAgent(Agent):
 
@@ -72,7 +125,7 @@ class ClosestDotAgent(Agent):
 
         "*** YOUR CODE HERE ***"
 
-        return search.aStarSearch(problem)
+        return search.breadthFirstSearch(problem)
         #util.raiseNotDefined()
 
     def getAction(self, state):
