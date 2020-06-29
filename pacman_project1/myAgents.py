@@ -32,24 +32,38 @@ class MyAgent(Agent):
     Implementation of your agent.
     """
 
+    # Da bi mogli da razmenjuju informacije između više Pac-Man-ova,
+    # kreiramo promenljivu
+
+    # Indicates how many Pac-Man people there are
     pacmanAmount = 0
+    # Indicate which food has been set as the target, so other Pac-Man can ignore it
     chasingGoal = []
 
     def getAction(self, state):
         """
         Returns the next action the agent will take
         """
+
+        # If you pass the previous calculations and confirm that Doudou’s tasks have been completed,
+        # in order to save computing resources, stop Doudou directly
         if self.isFinished:
             return Directions.STOP
         else:
+            # If there is no next step in the action sequence,
+            # then a new action sequence must be generated
             if len(self.actions) == 0:
-                actions = search.bfs(MyFoodSearchProblem(state, self.index))
+                actions = search.ucs(MyFoodSearchProblem(state, self.index))
                 self.actions = actions
-                # print(actions)
+                print(actions)
+            #  As long as the action sequence is not empty,
+            #  return the first action and update the action sequence
             if len(self.actions) > 0:
                 nextAction = self.actions[0]
                 del self.actions[0]
                 return nextAction
+            # If there are no further steps in the action sequence,
+            # then the task of Doudou is completed
             else:
                 self.isFinished = True
                 return Directions.STOP
@@ -62,6 +76,9 @@ class MyAgent(Agent):
         """
 
         "*** YOUR CODE HERE"
+        # Initialize some Pac-Man information
+        # isFinished indicates whether Pac-Man has completed his task,
+        # initially is False
         self.isFinished = False
         self.actions = []
 
