@@ -1,4 +1,4 @@
-from __future__ import print_function
+#from __future__ import print_function
 import numpy, random, copy
 
 
@@ -11,9 +11,9 @@ class Cluster(object):
     def recalculate_center(self):
         # TODO 1: implementirati racunanje centra klastera
         # centar klastera se racuna kao prosecna vrednost svih podataka u klasteru
-        new_center = [0 for i in xrange(len(self.center))]
+        new_center = [0 for i in range(len(self.center))]
         for d in self.data:
-            for i in xrange(len(d)):
+            for i in range(len(d)):
                 new_center[i] += d[i]
 
         n = len(self.data)
@@ -45,8 +45,8 @@ class KMeans(object):
         dimensions = len(self.data[0])
 
         # napravimo N random tacaka i stavimo ih kao centar klastera
-        for i in xrange(self.n_clusters):
-            point = [random.random() for x in xrange(dimensions)]
+        for i in range(self.n_clusters):
+            point = [random.random() for x in range(dimensions)]
             self.clusters.append(Cluster(point))
 
         iter_no = 0
@@ -80,7 +80,7 @@ class KMeans(object):
         # kao rezultat vratiti indeks klastera kojem pripada
         min_distance = None
         cluster_index = None
-        for index in xrange(len(self.clusters)):
+        for index in range(len(self.clusters)):
             distance = self.euclidean_distance(datum, self.clusters[index].center)
             if min_distance is None or distance < min_distance:
                 cluster_index = index
@@ -100,7 +100,7 @@ class KMeans(object):
         # mean-std normalizacija
         cols = len(data[0])
 
-        for col in xrange(cols):
+        for col in range(cols):
             column_data = []
             for row in data:
                 column_data.append(row[col])
