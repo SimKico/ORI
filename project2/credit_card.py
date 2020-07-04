@@ -130,20 +130,20 @@ grouped = train_clean.groupby(by='Clusters').mean().round(1)
 grouped.iloc[:,[0,1,6,8,9,11,12,16]]
 features = ["BALANCE", "BALANCE_FREQUENCY", "PURCHASES_FREQUENCY", "PURCHASES_INSTALLMENTS_FREQUENCY",
           "CASH_ADVANCE_FREQUENCY", "PURCHASES_TRX","CREDIT_LIMIT","TENURE"]
-plt.figure(figsize=(15,10))
+#plt.figure(figsize=(15,10))
 for i, j in enumerate(features):
-    plt.subplot(3, 3, i+1)
+    #plt.subplot(3, 3, i+1)
     sns.barplot(grouped.index,grouped[j])
     plt.title(j, fontdict={'color':'darkblue'})
-plt.tight_layout()
-plt.show()
+    plt.tight_layout()
+    plt.show()
 
 #Pokusaj neceg
-fig, ax = plt.subplots()
-plt.xlabel('Credit amount', fontsize=12)
-plt.ylabel('Duration', fontsize=12)
-ax.scatter(train_data["PAYMENTS"], train_data["PURCHASES_FREQUENCY"])
-plt.gca().legend(('male','female'))
-plt.show()
+# fig, ax = plt.subplots()
+# plt.xlabel('Credit amount', fontsize=12)
+# plt.ylabel('Duration', fontsize=12)
+# ax.scatter(train_data["PAYMENTS"], train_data["PURCHASES_FREQUENCY"])
+# plt.gca().legend(('male','female'))
+# plt.show()
 
 
