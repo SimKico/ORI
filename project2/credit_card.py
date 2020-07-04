@@ -49,7 +49,7 @@ warnings.filterwarnings('ignore')
 #Kmeans
 #from kmeans import KMeans
 
-train_data = pd.read_csv('data\data.csv')
+train_data = pd.read_csv('data/credit_card_data.csv')
 print("Data Types:", train_data.dtypes)
 
 print(' {} - rows \n {} - columns.\n'.format(train_data.shape[0],train_data.shape[1]))
@@ -122,7 +122,7 @@ fig = plt.figure(figsize=(12, 7), dpi=80, facecolor='w', edgecolor='k')
 # print(Sum_of_squared_distances)
 #
 
-plt.scatter(pca[:, 0], pca[:, 1], c=km,s=50, cmap='viridis')
+plt.scatter(pca[:, 0], pca[:, 1], c=km, s=50, cmap='viridis')
 plt.show()
 
 # train_clean['Clusters'] = list(km)
