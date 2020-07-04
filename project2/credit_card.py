@@ -111,8 +111,8 @@ km = KMeans(n_clusters=8)
 km = km.fit_predict(train_clean)
 
 #POKUSAJ NECEG
-# pca = PCA(n_components=3).fit_transform(train_clean)
-# fig = plt.figure(figsize=(12, 7), dpi=80, facecolor='w', edgecolor='k')
+pca = PCA(n_components=2).fit_transform(train_clean)
+fig = plt.figure(figsize=(12, 7), dpi=80, facecolor='w', edgecolor='k')
 # ax = plt.axes(projection="3d")
 # ax.scatter3D(pca.T[0],pca.T[1],pca.T[2],c=km,cmap='Spectral')
 # xLabel = ax.set_xlabel('X')
@@ -121,8 +121,9 @@ km = km.fit_predict(train_clean)
 # plt.show()
 # print(Sum_of_squared_distances)
 #
-# plt.scatter(pca[:, 0], pca[:, 1], c=km,s=50, cmap='viridis')
-# plt.show()
+
+plt.scatter(pca[:, 0], pca[:, 1], c=km,s=50, cmap='viridis')
+plt.show()
 
 train_clean['Clusters'] = list(km)
 train_clean.set_index('Clusters')
@@ -134,16 +135,9 @@ features = ["BALANCE", "BALANCE_FREQUENCY", "PURCHASES_FREQUENCY", "PURCHASES_IN
 for i, j in enumerate(features):
     #plt.subplot(3, 3, i+1)
     sns.barplot(grouped.index,grouped[j])
-    plt.title(j, fontdict={'color':'darkblue'})
+    plt.title(j, fontdict={'color': 'darkblue'})
     plt.tight_layout()
     plt.show()
 
-#Pokusaj neceg
-# fig, ax = plt.subplots()
-# plt.xlabel('Credit amount', fontsize=12)
-# plt.ylabel('Duration', fontsize=12)
-# ax.scatter(train_data["PAYMENTS"], train_data["PURCHASES_FREQUENCY"])
-# plt.gca().legend(('male','female'))
-# plt.show()
 
 
