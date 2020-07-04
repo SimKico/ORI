@@ -125,16 +125,45 @@ fig = plt.figure(figsize=(12, 7), dpi=80, facecolor='w', edgecolor='k')
 plt.scatter(pca[:, 0], pca[:, 1], c=km,s=50, cmap='viridis')
 plt.show()
 
-train_clean['Clusters'] = list(km)
-train_clean.set_index('Clusters')
-grouped = train_clean.groupby(by='Clusters').mean().round(1)
-grouped.iloc[:,[0,1,6,8,9,11,12,16]]
-features = ["BALANCE", "BALANCE_FREQUENCY", "PURCHASES_FREQUENCY", "PURCHASES_INSTALLMENTS_FREQUENCY",
-          "CASH_ADVANCE_FREQUENCY", "PURCHASES_TRX","CREDIT_LIMIT","TENURE"]
-#plt.figure(figsize=(15,10))
-for i, j in enumerate(features):
+# train_clean['Clusters'] = list(km)
+# train_clean.set_index('Clusters')
+# grouped = train_clean.groupby(by='Clusters').mean().round(1)
+# grouped.iloc[:,[0,1,6,8,9,11,12,16]]
+# features = ["BALANCE", "BALANCE_FREQUENCY", "PURCHASES_FREQUENCY", "PURCHASES_INSTALLMENTS_FREQUENCY",
+#           "CASH_ADVANCE_FREQUENCY", "PURCHASES_TRX","CREDIT_LIMIT","TENURE"]
+# #plt.figure(figsize=(15,10))
+# for i, j in enumerate(features):
+#     #plt.subplot(3, 3, i+1)
+#     sns.barplot(grouped.index,grouped[j])
+#     plt.title(j, fontdict={'color': 'darkblue'})
+#     plt.tight_layout()
+#     plt.show()
+
+#OPCIJA 3
+
+np.random.seed(0)
+msk = np.random.rand(len(train_clean)) < 0.8
+trained_data = train_clean[msk]
+test_data = train_clean[~msk]
+
+data = np.array(trained_data)
+data_test = np.array(test_data)
+
+kmeans = KMeans(n_clusters=8, random_state=0).fit(data)
+
+y_k = kmeans.predict(data_test)
+test_data['PREDICTED_CLUSTER'] = y_k
+train_summary = test_data.groupby(by='PREDICTED_CLUSTER').mean()
+train_summary = train_summary[['BALANCE', 'PURCHASES',
+                               'PURCHASES_FREQUENCY','CREDIT_LIMIT',
+                               'ONEOFF_PURCHASES_FREQUENCY',
+                              'MINIMUM_PAYMENTS','PRC_FULL_PAYMENT',
+                               'PAYMENTS']]
+print(train_summary)
+
+for i, j in enumerate(train_summary):
     #plt.subplot(3, 3, i+1)
-    sns.barplot(grouped.index,grouped[j])
+    sns.barplot(train_summary.index, train_summary[j])
     plt.title(j, fontdict={'color': 'darkblue'})
     plt.tight_layout()
     plt.show()
