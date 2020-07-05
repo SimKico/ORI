@@ -16,16 +16,17 @@ def load_metadata(data_folder):
     # data_folder = 'data\chest_xray_data_set\chest_xray_data_set\metadata\chest_xray_metadata.csv'
 
     metadata = pd.read_csv(os.path.join(data_folder))
+    modifiedDataset = metadata.fillna(" ")
     file_system_scan = {os.path.basename(x): x for x in
                         glob(os.path.join('.', 'data', 'images*', '*.png'))}
     # if len(file_system_scan) != metadata.shape[0]:
     #     raise Exception(
     #         'ERROR: Different number metadata records and png files.'.format())
 
-    metadata['path'] = metadata['X_ray_image_name'].map(file_system_scan.get)
+    modifiedDataset['path'] = modifiedDataset['X_ray_image_name'].map(file_system_scan.get)
     print('Total x-ray records:{}.'.format((metadata.shape[0])))
 
-    return metadata
+    return modifiedDataset
 
 # all_xray= pd.read_csv('data\chest_xray_data_set\chest_xray_data_set\metadata\chest_xray_metadata.csv')
 # all_image_paths = {os.path.basename(x): x for x in
@@ -46,24 +47,25 @@ def preprocess_metadata(metadata):
     # izbaciti smoking Stress-Smoking
     # ici po label1 razdvajanje Label_1_Virus_category
 
-    print(metadata['Label'])
-    metadata['Label'] = metadata['Label'].map(
-        lambda x: x.replace('No Finding', ''))
+    print(metadata['Label_1_Virus_category'])
+    metadata['Label_1_Virus_category'] = metadata['Label_1_Virus_category'].map(
+        lambda x: x.replace(' ', 'Normal'))
 
+    print(metadata['Label_1_Virus_category'])
 
     labels = np.unique(
-        list(chain(*metadata['Label'].map(lambda x: x.split('|')).tolist())))
+        list(chain(*metadata['Label_1_Virus_category'].map(lambda x: x.split('|')).tolist())))
     labels = [x for x in labels if len(x) > 0]
 
     for c_label in labels:
         if len(c_label) > 1:  # leave out empty labels
-            metadata[c_label] = metadata['Label'].map(
+            metadata[c_label] = metadata['Label_1_Virus_category'].map(
                 lambda finding: 1.0 if c_label in finding else 0)
 
     labels = [c_label for c_label in labels if metadata[c_label].sum()
               > 2]
 
-    sample_weights = metadata['Label'].map(
+    sample_weights = metadata['Label_1_Virus_category'].map(
         lambda x: len(x.split('|')) if len(x) > 0 else 0).values + 4e-2
     sample_weights /= sample_weights.sum()
 
@@ -80,7 +82,7 @@ def preprocess_metadata(metadata):
 
 def stratify_train_test_split(metadata):
 
-    stratify = metadata['Label'].map(lambda x: x[:4])
+    stratify = metadata['Label_1_Virus_category'].map(lambda x: x[:4])
     train, valid = train_test_split(metadata,
                                     test_size=0.25,
                                     random_state=2018,
