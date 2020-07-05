@@ -66,6 +66,7 @@ def stratify_train_test_split(metadata):
                                     test_size=0.25,
                                     random_state=2018,
                                     stratify=stratify)
+    print('train', train.shape[0], 'validation', valid.shape[0])
     return train, valid
 
 if __name__ == '__main__':
