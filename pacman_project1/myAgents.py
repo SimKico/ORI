@@ -32,38 +32,37 @@ class MyAgent(Agent):
     Implementation of your agent.
     """
 
-    # Da bi mogli da razmenjuju informacije između više Pac-Man-ova,
+    # Da bi mogli da razmenjuju informacije između više Pacman-ova,
     # kreiramo promenljivu
 
-    # Indicates how many Pac-Man people there are
+    # Broj PacMan-ova
     pacmanAmount = 0
-    # Indicate which food has been set as the target, so other Pac-Man can ignore it
+    # Hrana koja je postavljena za cilj nekog Pacman, kako bi je drugi Pacman-ovi ignorisali
+    # da bi izbjegli situaciju da vise PacMana ganja istu hranu
     chasingGoal = []
 
     def getAction(self, state):
         """
-        Returns the next action the agent will take
+            Returns the next action the agent will take
         """
-
-        # If you pass the previous calculations and confirm that Doudou’s tasks have been completed,
-        # in order to save computing resources, stop Doudou directly
+        #Zaustavi Pacmana
         if self.isFinished:
             return Directions.STOP
         else:
-            # If there is no next step in the action sequence,
-            # then a new action sequence must be generated
+            # ako nema vise koraka u listi akcija,
+            # onda se generise nova lista akcija
             if len(self.actions) == 0:
                 actions = search.ucs(MyFoodSearchProblem(state, self.index))
                 self.actions = actions
                 print(actions)
-            #  As long as the action sequence is not empty,
-            #  return the first action and update the action sequence
+            # Sve dok lista akcija nije prazna,
+            # vracaj prvu akciju i azuriraj listu akcija
             if len(self.actions) > 0:
                 nextAction = self.actions[0]
                 del self.actions[0]
                 return nextAction
-            # If there are no further steps in the action sequence,
-            # then the task of Doudou is completed
+            # Ako je lista akcija prazna,
+            # zaustavi Pacmana
             else:
                 self.isFinished = True
                 return Directions.STOP
@@ -76,9 +75,7 @@ class MyAgent(Agent):
         """
 
         "*** YOUR CODE HERE"
-        # Initialize some Pac-Man information
-        # isFinished indicates whether Pac-Man has completed his task,
-        # initially is False
+        # Inicijalizacija podataka
         self.isFinished = False
         self.actions = []
 
@@ -93,21 +90,21 @@ search.py and searchProblems.py. (ClosestDotAgent as an example below)
 class MyFoodSearchProblem(PositionSearchProblem):
 
     def __init__(self, gameState, agentIndex):
-        "Stores information from the gameState.  You don't need to change this."
-        # Store the food for later reference
+
+        # Info o hrani
         self.food = gameState.getFood()
 
-        # Store info for the PositionSearchProblem (no need to change this)
+        # PositionSearchProblem
         self.walls = gameState.getWalls()
         self.startState = gameState.getPacmanPosition(agentIndex)
         self.costFn = lambda x: 1
-        self._visited, self._visitedlist, self._expanded = {}, [], 0  # DO NOT CHANGE
+        self._visited, self._visitedlist, self._expanded = {}, [], 0
 
-
+        # dodjeljujemo svakom Pacmanu hranu koju ce on da jede
         self.agentIndex = agentIndex
         self.foodAll = self.food.asList()
         avgFood = len(self.foodAll) // MyAgent.pacmanAmount + 1
-        self.foodByAgent = self.foodAll[agentIndex * avgFood: (agentIndex + 1) * avgFood]
+        self.foodByAgent = self.foodAll[agentIndex * avgFood : (agentIndex + 1) * avgFood]
 
     def isGoalState(self, state):
         if len(self.foodAll) <= MyAgent.pacmanAmount:

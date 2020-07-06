@@ -24,6 +24,8 @@ def load_metadata(data_folder):
     file_system_scan = {**file_system_scan_jpeg, **file_system_scan_jpg,  **file_system_scan_png}
     modifiedDataset['path'] = modifiedDataset['X_ray_image_name'].map(file_system_scan.get)
 
+    print(len(modifiedDataset['path']))
+
     print( modifiedDataset['path'])
     print('Total x-ray records:{}.'.format((metadata.shape[0])))
     return modifiedDataset

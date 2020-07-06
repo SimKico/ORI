@@ -17,6 +17,7 @@ core_idg = ImageDataGenerator(samplewise_center=True,
 def flow_from_dataframe(img_data_gen, in_df, path_col, y_col, **dflow_args):
     print(in_df[path_col].values[0])
     base_dir = os.path.dirname(in_df[path_col].values[0])
+    print(base_dir)
     print('## Ignore next message from keras, values are replaced anyways')
     df_gen = img_data_gen.flow_from_directory(base_dir, class_mode='sparse', **dflow_args)
     df_gen.filenames = in_df[path_col].values
@@ -42,14 +43,14 @@ valid_gen = flow_from_dataframe(core_idg, valid,
                              color_mode = 'grayscale',
                             batch_size = 256) # we can use much larger batches for evaluation
 # used a fixed dataset for evaluating the algorithm
-# test_X, test_Y = next(flow_from_dataframe(core_idg,
-#                                valid,
-#                              path_col = 'path',
-#                             y_col = 'disease_vec',
-#                             target_size = IMG_SIZE,
-#                              color_mode = 'grayscale',
-#                             batch_size = 1024)) # one big batch
-#
+test_X, test_Y = next(flow_from_dataframe(core_idg,
+                                          valid,
+                                          path_col = 'path',
+                                          y_col = 'disease_vec',
+                                          target_size = IMG_SIZE,
+                                          color_mode = 'grayscale',
+                                          batch_size = 1024))# one big batch
+
 
 
 #t_x, t_y = next(train_gen)

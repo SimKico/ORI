@@ -110,36 +110,21 @@ plt.show()
 km = KMeans(n_clusters=8)
 km = km.fit_predict(train_clean)
 
-#POKUSAJ NECEG
-pca = PCA(n_components=2).fit_transform(train_clean)
-fig = plt.figure(figsize=(12, 7), dpi=80, facecolor='w', edgecolor='k')
-# ax = plt.axes(projection="3d")
-# ax.scatter3D(pca.T[0],pca.T[1],pca.T[2],c=km,cmap='Spectral')
-# xLabel = ax.set_xlabel('X')
-# yLabel = ax.set_ylabel('Y')
-# zLabel = ax.set_ylabel('Z')
-# plt.show()
-# print(Sum_of_squared_distances)
-#
-
-plt.scatter(pca[:, 0], pca[:, 1], c=km, s=50, cmap='viridis')
+# 3D data
+pca = PCA(n_components=3).fit_transform(train_clean)
+fig = plt.figure(figsize=(8, 7), dpi=80, facecolor='w', edgecolor='k')
+ax = plt.axes(projection="3d")
+ax.scatter3D(pca.T[0],pca.T[1],pca.T[2],c=km,cmap='Spectral')
+xLabel = ax.set_xlabel('X')
+yLabel = ax.set_ylabel('Y')
+zLabel = ax.set_ylabel('Z')
 plt.show()
+print(Sum_of_squared_distances)
 
-# train_clean['Clusters'] = list(km)
-# train_clean.set_index('Clusters')
-# grouped = train_clean.groupby(by='Clusters').mean().round(1)
-# grouped.iloc[:,[0,1,6,8,9,11,12,16]]
-# features = ["BALANCE", "BALANCE_FREQUENCY", "PURCHASES_FREQUENCY", "PURCHASES_INSTALLMENTS_FREQUENCY",
-#           "CASH_ADVANCE_FREQUENCY", "PURCHASES_TRX","CREDIT_LIMIT","TENURE"]
-# #plt.figure(figsize=(15,10))
-# for i, j in enumerate(features):
-#     #plt.subplot(3, 3, i+1)
-#     sns.barplot(grouped.index,grouped[j])
-#     plt.title(j, fontdict={'color': 'darkblue'})
-#     plt.tight_layout()
-#     plt.show()
-
-#OPCIJA 3
+# 2D data
+pca2 = PCA(n_components=2).fit_transform(train_clean)
+plt.scatter(pca2[:, 0], pca2[:, 1], c=km, s=50, cmap='viridis')
+plt.show()
 
 np.random.seed(0)
 msk = np.random.rand(len(train_clean)) < 0.8
@@ -161,12 +146,16 @@ train_summary = train_summary[['BALANCE', 'PURCHASES',
                                'PAYMENTS']]
 print(train_summary)
 
+
+plt.figure(figsize=(15,15),dpi=60, facecolor='w', edgecolor='k')
 for i, j in enumerate(train_summary):
-    #plt.subplot(3, 3, i+1)
+    plt.subplot(3, 3, i+1)
+
     sns.barplot(train_summary.index, train_summary[j])
     plt.title(j, fontdict={'color': 'darkblue'})
-    plt.tight_layout()
-    plt.show()
+
+plt.tight_layout()
+plt.show()
 
 
 
