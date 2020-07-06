@@ -107,14 +107,19 @@ class MyFoodSearchProblem(PositionSearchProblem):
         self.foodByAgent = self.foodAll[agentIndex * avgFood : (agentIndex + 1) * avgFood]
 
     def isGoalState(self, state):
+        #resavanje situacije kad je vise Pacmena nego hrane
         if len(self.foodAll) <= MyAgent.pacmanAmount:
             return state in self.foodAll
+        #procenjujemo trenutnu poziciju ako ima hrane
         if state in self.foodAll:
+            #ako je hrana u listi hrane tog agenta i ako nije vec dodeljena u ChasingGoal
             if (state in self.foodByAgent) and (state not in MyAgent.chasingGoal):
+                #dodajemo stanje u chasingGoal za tog Pacmena
                 MyAgent.chasingGoal.append(state)
                 return True
-            elif (util.manhattanDistance(state, self.startState) <= (1 + self.agentIndex) * (1 + self.agentIndex)) \
-                    and (state not in MyAgent.chasingGoal):
+            #ako je Pacmen blizu hrane, a hrana nije dodeljena drugom Pacmenu
+            elif (util.manhattanDistance(state, self.startState) <= (1 + self.agentIndex) * (1 + self.agentIndex)) and (state not in MyAgent.chasingGoal):
+                #dodajemo stanje u chasingGoal za tog Pacmena
                 MyAgent.chasingGoal.append(state)
                 return True
             else:

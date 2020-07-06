@@ -2,11 +2,10 @@ from itertools import chain
 
 import inline
 import matplotlib
-import numpy as np # linear algebra
-import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import numpy as np
+import pandas as pd
 import os
 from glob import glob
-# %matplotlib inline
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 
@@ -45,7 +44,7 @@ def preprocess_metadata(metadata):
     labels = [x for x in labels if len(x) > 0]
 
     for c_label in labels:
-        if len(c_label) > 1:  # leave out empty labels
+        if len(c_label) > 1:  # izostave se prazne labele
             metadata[c_label] = metadata['Label_1_Virus_category'].map(
                 lambda finding: 1.0 if c_label in finding else 0)
 
@@ -76,7 +75,6 @@ def stratify_train_test_split(metadata):
     print('train', train.shape[0], 'validation', valid.shape[0])
     return train, valid
 
-#if __name__ == '__main__':
 
 
 data_folder = 'data\chest_xray_data_set\chest_xray_data_set'

@@ -95,7 +95,7 @@ plt.xlabel('Number of clusters')
 plt.ylabel('Inertia')
 plt.title('Elbow Method For Optimal k')
 x_pos = 1.5
-y_pos = 140000
+y_pos = 5000
 plt.text(x_pos, y_pos, 'After 8 clusters adding more gives minimal benefit to the model.')
 plt.show()
 

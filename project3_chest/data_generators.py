@@ -25,7 +25,7 @@ def flow_from_dataframe(img_data_gen, in_df, path_col, y_col, **dflow_args):
     df_gen.samples = in_df.shape[0]
     df_gen.n = in_df.shape[0]
     df_gen._set_index_array()
-    df_gen.directory = '' # since we have the full path
+    df_gen.directory = ''
     print('Reinserting dataframe: {} images'.format(in_df.shape[0]))
     return df_gen
 
@@ -41,26 +41,8 @@ valid_gen = flow_from_dataframe(core_idg, valid,
                             y_col = 'disease_vec',
                             target_size = IMG_SIZE,
                              color_mode = 'grayscale',
-                            batch_size = 256) # we can use much larger batches for evaluation
-# used a fixed dataset for evaluating the algorithm
-test_X, test_Y = next(flow_from_dataframe(core_idg,
-                                          valid,
-                                          path_col = 'path',
-                                          y_col = 'disease_vec',
-                                          target_size = IMG_SIZE,
-                                          color_mode = 'grayscale',
-                                          batch_size = 1024))# one big batch
+                            batch_size = 256)
 
-
-
-#t_x, t_y = next(train_gen)
-
-# fig, m_axs = plt.subplots(4, 4, figsize = (16, 16))
-# for (c_x, c_y, c_ax) in zip(t_x, t_y, m_axs.flatten()):
-#     c_ax.imshow(c_x[:,:,0], cmap = 'bone', vmin = -1.5, vmax = 1.5)
-#     c_ax.set_title(', '.join([n_class for n_class, n_score in zip(labels, c_y)
-#                               if n_score > 0.5]))
-#     c_ax.axis('off')
 
 print("ANYTHIIIIIIING")
 print(train_gen)
